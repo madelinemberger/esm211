@@ -18,11 +18,12 @@ grizzly <- read_csv(here("hw_1", "grizzlydata.csv"))
 ###Part 1
 **1. Give three reasons why a plant or animal might be patchily distributed like this. For each, describe whether you would expect the location of the high-density patches to be consistent from year to year (1 point).**
 
-1. The landscape might be in patches. Even at a small scales, landscapes may have distinct pathes of vegetation or land cover that would cause populations to cluster in this pattern. An example might be a gold course, where there might exist small patches of unmanaged land or ponds between the managed greens. In this case, unless the land use of the area was altered, you would expect the patches to be consistent year to year.
+1. The landscape might be patched. Even at a small scales, landscapes may have distinct patches of vegetation or land cover that would cause populations to cluster in this pattern. An example might be a golf course, where there might exist small patches of unmanaged land or ponds between the managed greens. In this case, unless the land use of the area was altered, you would expect the patches to be consistent year to year. 
 
-2. Access to light, or other limiting abiotic environmental factors may be unevenly distributed across the landscape. 
+2. Access to light, or other limiting abiotic environmental factors may be unevenly distributed across the landscape. An example might be a forest with some very tall canopy trees that block lights in large patches, causing shorter species to congregate in specific areas. This may not be totally consistent year to year depending on the growth rate of the canopy species, as leaf cover and branches may shift as the species grows.
 
-3. 
+
+3. Depending 
 
 ###Part 2 - Eureka Dune grass
 **2. Read in the data, and use a two-sample t-test (e.g., using t.test() in R) to assess whether and how mean abundance changed from 2009 to 2010. Choose a level for α, and justify your choice. On the basis of this analysis, what do you conclude about the change in the grass’s abundance? (1 point)**
@@ -49,3 +50,83 @@ t.test(swallenia$count_2009, swallenia$count_2010, paired = TRUE, conf.level = 0
 ```
 
 **4. Which of these analyses is more appropriate? Why? (Hint: think about your answers to question 1, and whether any apply here) (1 point)**
+
+I belive the second (paired t.test) analysis is more appropriate as it allows you to assess changes in abundace without confounds from any variance across sites. For example, there might be slightly different conditions at one cluster than another, therefore when comparing across timescales it is more informative to understand the change in growth given that the site and conditions are consistent. 
+
+
+**5. Write a short paragraph to the park superintendent describing your finding about the changes (if any) to the dune grass population. (1 point)**
+
+
+
+
+##Part 3 - Grizzly Bears
+
+**6. Open the file, and look at the data from 1959 to 1968. Did the grizzly bear population decline over this period? Support your conclusion with graphs, statistics, and logical reasoning. (2 points)**
+
+```{r}
+#graph 
+grizzly_early <- grizzly %>% 
+  filter(Year < 1969)
+
+grizzly_plot_1 <- ggplot(grizzly_early, aes(x = Year, y = N)) +
+  geom_line()
+
+grizzly_plot_1
+
+#statistics - treating N as a yearly mean
+
+
+
+t.test(grizzly_early$N[1,3], grizzly_early$N[8,10], conf.level = 0.95)
+
+```
+The graph suggests that the grizzly population did decline from 1959 to 1968. Logically, this would make sense as a main food source (the dumps) was removed around this time, causing more human-bear conflict that can lead to bear deaths. Statistically, 
+
+**7. Select the data from 1969 to 1978. Did the population continue to decline? Was the decline faster than the period prior to the dump closures? (1 point)**
+
+```{r}
+
+#plot
+grizzly_mid <- grizzly %>% 
+  filter( Year > 1968 & Year < 1979)
+
+grizzly_plot_2 <- ggplot(grizzly_mid, aes(x = Year, y = N)) +
+  geom_line()
+
+grizzly_plot_2
+
+#compare slopes - is the slope the rate of decline?
+
+early_model <- lm(grizzly_early$N ~ grizzly_early$Year)
+
+summary(early_model)
+
+
+mid_model <-lm(grizzly_mid$N ~ grizzly_mid$Year)
+
+summary(mid_model)
+```
+
+
+**8. Finally look at the data after 1978. Did population size continue to change? What was the direction and magnitude of the trend? (1 point)**
+
+```{r}
+
+grizzly_late <- grizzly %>% 
+  filter( Year > 1978)
+
+grizzly_plot_3 <- ggplot(grizzly_late, aes(x = Year, y = N)) +
+  geom_line()
+
+grizzly_plot_3
+
+#slope - regression
+
+late_model <-lm(grizzly_late$N ~ grizzly_late$Year)
+
+summary(late_model)
+
+```
+
+
+**9. Write a short paragraph to the park superintendent describing your conclusions on the effects (if any) of the dump closures on the grizzly bear population. (1 point)**
