@@ -1,0 +1,51 @@
+---
+title: "Homework 1"
+author: "Madeline Berger"
+date: "1/13/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(here)
+
+swallenia <- read_csv(here("hw_1","Swallenia (1).csv"))
+
+grizzly <- read_csv(here("hw_1", "grizzlydata.csv"))
+```
+###Part 1
+**1. Give three reasons why a plant or animal might be patchily distributed like this. For each, describe whether you would expect the location of the high-density patches to be consistent from year to year (1 point).**
+
+1. The landscape might be in patches. Even at a small scales, landscapes may have distinct pathes of vegetation or land cover that would cause populations to cluster in this pattern. An example might be a gold course, where there might exist small patches of unmanaged land or ponds between the managed greens. In this case, unless the land use of the area was altered, you would expect the patches to be consistent year to year.
+
+2. Access to light, or other limiting abiotic environmental factors may be unevenly distributed across the landscape. 
+
+3. 
+
+###Part 2 - Eureka Dune grass
+**2. Read in the data, and use a two-sample t-test (e.g., using t.test() in R) to assess whether and how mean abundance changed from 2009 to 2010. Choose a level for α, and justify your choice. On the basis of this analysis, what do you conclude about the change in the grass’s abundance? (1 point)**
+
+```{r}
+
+mean_2009 <- mean(swallenia$count_2009)
+
+mean_2010 <- mean(swallenia$count_2010)
+
+t.test(swallenia$count_2009, swallenia$count_2010, conf.level = 0.95)
+
+```
+
+Using a confidence level of 95%, it appears that there is not a significant different between the mean abundance of swallenia between 2009 and 2010. This confidence level was used...WHY?
+
+
+**3. Because the plant was counted in the same plots each year, you can also do a paired t-test (R hint: use paired = TRUE in t.test()). On the basis of this analysis, what do you conclude about the change in the grass’s abundance? (1 point)**
+
+```{r}
+
+t.test(swallenia$count_2009, swallenia$count_2010, paired = TRUE, conf.level = 0.95)
+
+```
+
+**4. Which of these analyses is more appropriate? Why? (Hint: think about your answers to question 1, and whether any apply here) (1 point)**
