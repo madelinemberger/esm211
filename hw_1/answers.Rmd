@@ -10,96 +10,125 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(here)
+library(stargazer)
 
 swallenia <- read_csv(here("hw_1","Swallenia (1).csv"))
 
 grizzly <- read_csv(here("hw_1", "grizzlydata.csv"))
 ```
-###Part 1
+####Part 1 - Distrubtion
 **1. Give three reasons why a plant or animal might be patchily distributed like this. For each, describe whether you would expect the location of the high-density patches to be consistent from year to year (1 point).**
 
-1. The landscape might be patched. Even at a small scales, landscapes may have distinct patches of vegetation or land cover that would cause populations to cluster in this pattern. An example might be a golf course, where there might exist small patches of unmanaged land or ponds between the managed greens. In this case, unless the land use of the area was altered, you would expect the patches to be consistent year to year. 
+1. The landscape might be patched. Even at a small scales, landscapes may have distinct patches of vegetation or land cover that would cause populations to cluster in this pattern. An example might be a golf course, where there might exist small patches of unmanaged land or ponds between the managed greens. In this case, unless the land use of the area was altered, you would expect the patches to be consistent year to year. Another, more natural example could include a tidepool landscape. 
 
-2. Access to light, or other limiting abiotic environmental factors may be unevenly distributed across the landscape. An example might be a forest with some very tall canopy trees that block lights in large patches, causing shorter species to congregate in specific areas. This may not be totally consistent year to year depending on the growth rate of the canopy species, as leaf cover and branches may shift as the species grows.
+2. Access to light, or other limiting abiotic environmental factors may be unevenly distributed across the landscape. An example might be a forest with some very tall canopy trees that block lights in large patches, causing shorter species to congregate in specific areas. This may not be totally consistent year to year depending on the growth rate of the canopy species, as leaf cover and branches may shift as the species grows. 
 
 
-3. Depending 
+3. Feeding behavior might also explain why certain species are distributed this way. Certain species of insects, fungi or plants may act as decomposers, attracting to areas where another animal has died. In this example, the high-density patches would not most likely not be consistent year to year.
 
-###Part 2 - Eureka Dune grass
+
+####Part 2 - Eureka Dune grass
 **2. Read in the data, and use a two-sample t-test (e.g., using t.test() in R) to assess whether and how mean abundance changed from 2009 to 2010. Choose a level for α, and justify your choice. On the basis of this analysis, what do you conclude about the change in the grass’s abundance? (1 point)**
 
-```{r}
-
+```{r, results=FALSE}
+#explore the means
 mean_2009 <- mean(swallenia$count_2009)
 
 mean_2010 <- mean(swallenia$count_2010)
 
+#run the t.test
 t.test(swallenia$count_2009, swallenia$count_2010, conf.level = 0.95)
 
 ```
 
-Using a confidence level of 95%, it appears that there is not a significant different between the mean abundance of swallenia between 2009 and 2010. This confidence level was used...WHY?
+Using a confidence level of 95% (alpha = 0.05) it appears that there is not a significant difference between the mean abundance of swallenia between 2009 and 2010 (t{10} = -0.81791, p > 0.05). This confidence level was used to minimize the risk of comitting a type 1 error, ie finding that there was a significant change in grass population when there actually was not. The greater management implications of a type 1 error in this case could be park managers interpreting a significant increase in population as a sign that current management is sufficient. This may overlook critical issues and prevent managers and scientists to do a more in depth analysis of the area and each site. 
 
 
 **3. Because the plant was counted in the same plots each year, you can also do a paired t-test (R hint: use paired = TRUE in t.test()). On the basis of this analysis, what do you conclude about the change in the grass’s abundance? (1 point)**
 
-```{r}
-
+```{r, results = FALSE}
+#run paired t.test
 t.test(swallenia$count_2009, swallenia$count_2010, paired = TRUE, conf.level = 0.95)
 
 ```
 
+On the basis of this analysis, there is sufficient evidence that there is a difference in abunance of swallenia between the years 2009 and 2010 (t{10} = -2.41, p < 0.05). 
+
 **4. Which of these analyses is more appropriate? Why? (Hint: think about your answers to question 1, and whether any apply here) (1 point)**
 
-I belive the second (paired t.test) analysis is more appropriate as it allows you to assess changes in abundace without confounds from any variance across sites. For example, there might be slightly different conditions at one cluster than another, therefore when comparing across timescales it is more informative to understand the change in growth given that the site and conditions are consistent. 
+I believe the second (paired t.test) analysis is more appropriate as it allows you to assess changes in abundace without confounds from any variance across sites. For example, there might be slightly different conditions at one cluster than another, therefore when comparing across timescales it is more informative to understand the change in growth given that the site and conditions are consistent.  
 
 
 **5. Write a short paragraph to the park superintendent describing your finding about the changes (if any) to the dune grass population. (1 point)**
 
+first test showed nothing, second test showed stuff, so suggests that there are some sites that are doing much better than others and there merits analysis of those individual sites. 
 
 
-
-##Part 3 - Grizzly Bears
+###Part 3 - Grizzly Bears
 
 **6. Open the file, and look at the data from 1959 to 1968. Did the grizzly bear population decline over this period? Support your conclusion with graphs, statistics, and logical reasoning. (2 points)**
 
-```{r}
+```{r, results= FALSE}
 #graph 
 grizzly_early <- grizzly %>% 
   filter(Year < 1969)
 
 grizzly_plot_1 <- ggplot(grizzly_early, aes(x = Year, y = N)) +
-  geom_line()
+  geom_line()+
+  theme_minimal()+
+  labs(x = "Year", y = "Bear Abundance", title = "Yearly Grizzly Bear population 1959 - 1968")+
+  theme(text = element_text(family = "Times"))
 
 grizzly_plot_1
 
-#statistics - treating N as a yearly mean
+#statistics - how has the population declined?
 
+early_diff <- (grizzly_early$N[10]-grizzly_early$N[1])
 
+early_pyr <- early_diff/10
 
-t.test(grizzly_early$N[1,3], grizzly_early$N[8,10], conf.level = 0.95)
+#the difference is -1/2 a bear per year
+
+early_perc <- early_diff/sum(grizzly_early$N)
+
+#total decline of about 1%
+
+early_model <- lm(grizzly_early$N ~ grizzly_early$Year)
+
+summary(early_model)
+
 
 ```
-The graph suggests that the grizzly population did decline from 1959 to 1968. Logically, this would make sense as a main food source (the dumps) was removed around this time, causing more human-bear conflict that can lead to bear deaths. Statistically, 
+The graph suggests that the grizzly population did decline from 1959 to 1968. Logically, this would make sense as a main food source (the dumps) was removed around this time, causing more human-bear conflict that can lead to bear deaths. Statistically, we find that there are 5 fewer bears reported in 1968 than in 1959 representing a total decline of about 1% during that time period. 
 
 **7. Select the data from 1969 to 1978. Did the population continue to decline? Was the decline faster than the period prior to the dump closures? (1 point)**
 
-```{r}
+```{r, results = FALSE}
 
 #plot
 grizzly_mid <- grizzly %>% 
   filter( Year > 1968 & Year < 1979)
 
 grizzly_plot_2 <- ggplot(grizzly_mid, aes(x = Year, y = N)) +
-  geom_line()
+  geom_line()+
+  theme_minimal()+
+  labs(x = "Year", y = "Bear Abundance", title = "Yearly Grizzly Bear population 1969 - 1978")+
+  theme(text = element_text(family = "Times"))
 
 grizzly_plot_2
 
-#compare slopes - is the slope the rate of decline?
 
-early_model <- lm(grizzly_early$N ~ grizzly_early$Year)
+#statistics - how has the population declined?
 
-summary(early_model)
+mid_diff <- (grizzly_mid$N[10]-grizzly_mid$N[1])
+
+mid_pyr <- mid_diff/10
+
+#the total percent decline
+
+mid_perc <- mid_diff/sum(grizzly_early$N)
+
+#use linear regression to compare slopes - is the slope the rate of decline?
 
 
 mid_model <-lm(grizzly_mid$N ~ grizzly_mid$Year)
@@ -107,26 +136,43 @@ mid_model <-lm(grizzly_mid$N ~ grizzly_mid$Year)
 summary(mid_model)
 ```
 
+The grizzly population continued to decline during this period. Between 1969 and 1978 the population decreased by 8 bears, representing close to a 2% decline overall. The rate of decline was similar to the previous 10 years. Using a simple linear regression we find that from 1959 to 1968, the average rate of decline was -0.763 bears per year, while from 1969 to 1978 the population declined on average -0.757 bears per year. 
 
 **8. Finally look at the data after 1978. Did population size continue to change? What was the direction and magnitude of the trend? (1 point)**
 
-```{r}
+```{r, results= FALSE}
 
 grizzly_late <- grizzly %>% 
   filter( Year > 1978)
 
 grizzly_plot_3 <- ggplot(grizzly_late, aes(x = Year, y = N)) +
-  geom_line()
+  geom_line()+
+  theme_minimal()+
+  labs(x = "Year", y = "Bear Abundance", title = "Yearly Grizzly Bear population 1978 - 1997")+
+  theme(text = element_text(family = "Times"))
 
 grizzly_plot_3
 
-#slope - regression
+
+#statistics - how has the population declined?
+
+late_diff <- (grizzly_late$N[10]-grizzly_late$N[1])
+
+late_pyr <- late_diff/10
+
+#the total percent decline
+
+late_perc <- late_diff/sum(grizzly_early$N)
+
+#use linear regression to compare slopes - is the slope the rate of decline?
 
 late_model <-lm(grizzly_late$N ~ grizzly_late$Year)
 
 summary(late_model)
 
 ```
-
+For the last 10 years represented in the data set, there appears to be an increase in bear population, with 22 more bears in 1979 than in 1968. Using linear regression, this amounts to an on average incease of 3.15 bears per year. 
 
 **9. Write a short paragraph to the park superintendent describing your conclusions on the effects (if any) of the dump closures on the grizzly bear population. (1 point)**
+
+While the dump closures appeared to coincide with a decline in the grizzly bear population, our analysis suggests that it actually had very little short term effect. The bear popluation was declining prior to the dump closures at about -.76 bears per year, and this rate remained approximately the same for the 10 year period after. Longer term, the dump closures may have had a positive effect on the grizzly population, as bear abundance increased between 1979 and 1997 at an average rate of approximately 3 bears per year. This may suggest that while dump closures may have at first increased human bear conflict, in the long term the decision helped keep bears away from the more densely populated areas of the park and decreased conflicts. 

@@ -1,0 +1,380 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
+\usepackage[unicode=true]{hyperref}
+\hypersetup{
+            pdftitle={Homework 1},
+            pdfauthor={Madeline Berger},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{Homework 1}
+\author{Madeline Berger}
+\date{1/13/2020}
+
+\begin{document}
+\maketitle
+
+\subsubsection{Part 1}\label{part-1}
+
+\textbf{1. Give three reasons why a plant or animal might be patchily
+distributed like this. For each, describe whether you would expect the
+location of the high-density patches to be consistent from year to year
+(1 point).}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  The landscape might be patched. Even at a small scales, landscapes may
+  have distinct patches of vegetation or land cover that would cause
+  populations to cluster in this pattern. An example might be a golf
+  course, where there might exist small patches of unmanaged land or
+  ponds between the managed greens. In this case, unless the land use of
+  the area was altered, you would expect the patches to be consistent
+  year to year. Another, more natural example could include a tidepool
+  landscape.
+\item
+  Access to light, or other limiting abiotic environmental factors may
+  be unevenly distributed across the landscape. An example might be a
+  forest with some very tall canopy trees that block lights in large
+  patches, causing shorter species to congregate in specific areas. This
+  may not be totally consistent year to year depending on the growth
+  rate of the canopy species, as leaf cover and branches may shift as
+  the species grows.
+\item
+  Feeding behavior might also explain why certain species are
+  distributed this way. Certain species of insects, fungi or plants may
+  act as decomposers, attracting to areas where another animal has died.
+  In this example, the high-density patches would not most likely not be
+  consistent year to year.
+\end{enumerate}
+
+\subsubsection{Part 2 - Eureka Dune
+grass}\label{part-2---eureka-dune-grass}
+
+\textbf{2. Read in the data, and use a two-sample t-test (e.g., using
+t.test() in R) to assess whether and how mean abundance changed from
+2009 to 2010. Choose a level for α, and justify your choice. On the
+basis of this analysis, what do you conclude about the change in the
+grass's abundance? (1 point)}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#explore the means}
+\NormalTok{mean_}\DecValTok{2009}\NormalTok{ <-}\StringTok{ }\KeywordTok{mean}\NormalTok{(swallenia}\OperatorTok{$}\NormalTok{count_}\DecValTok{2009}\NormalTok{)}
+
+\NormalTok{mean_}\DecValTok{2010}\NormalTok{ <-}\StringTok{ }\KeywordTok{mean}\NormalTok{(swallenia}\OperatorTok{$}\NormalTok{count_}\DecValTok{2010}\NormalTok{)}
+
+\CommentTok{#run the t.test}
+\KeywordTok{t.test}\NormalTok{(swallenia}\OperatorTok{$}\NormalTok{count_}\DecValTok{2009}\NormalTok{, swallenia}\OperatorTok{$}\NormalTok{count_}\DecValTok{2010}\NormalTok{, }\DataTypeTok{conf.level =} \FloatTok{0.95}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Using a confidence level of 95\% (alpha = 0.05) it appears that there is
+not a significant difference between the mean abundance of swallenia
+between 2009 and 2010 (t\{10\} = -0.81791, p \textgreater{} 0.05). This
+confidence level was used to minimize the risk of comitting a type 1
+error, ie finding that there was a significant change in grass
+population when there actually was not. The greater management
+implications of a type 1 error in this case could be park managers
+interpreting a significant increase in population as a sign that current
+management is sufficient. This may overlook critical issues and prevent
+managers and scientists to do a more in depth analysis of the area and
+each site.
+
+\textbf{3. Because the plant was counted in the same plots each year,
+you can also do a paired t-test (R hint: use paired = TRUE in t.test()).
+On the basis of this analysis, what do you conclude about the change in
+the grass's abundance? (1 point)}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#run paired t.test}
+\KeywordTok{t.test}\NormalTok{(swallenia}\OperatorTok{$}\NormalTok{count_}\DecValTok{2009}\NormalTok{, swallenia}\OperatorTok{$}\NormalTok{count_}\DecValTok{2010}\NormalTok{, }\DataTypeTok{paired =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{conf.level =} \FloatTok{0.95}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+On the basis of this analysis, there is sufficient evidence that there
+is a difference in abunance of swallenia between the years 2009 and 2010
+(t\{10\} = -2.41, p \textless{} 0.05).
+
+\textbf{4. Which of these analyses is more appropriate? Why? (Hint:
+think about your answers to question 1, and whether any apply here) (1
+point)}
+
+I believe the second (paired t.test) analysis is more appropriate as it
+allows you to assess changes in abundace without confounds from any
+variance across sites. For example, there might be slightly different
+conditions at one cluster than another, therefore when comparing across
+timescales it is more informative to understand the change in growth
+given that the site and conditions are consistent.
+
+\textbf{5. Write a short paragraph to the park superintendent describing
+your finding about the changes (if any) to the dune grass population. (1
+point)}
+
+first test showed nothing, second test showed stuff, so suggests that
+there are some sites that are doing much better than others and there
+merits analysis of those individual sites.
+
+\subsection{Part 3 - Grizzly Bears}\label{part-3---grizzly-bears}
+
+\textbf{6. Open the file, and look at the data from 1959 to 1968. Did
+the grizzly bear population decline over this period? Support your
+conclusion with graphs, statistics, and logical reasoning. (2 points)}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#graph }
+\NormalTok{grizzly_early <-}\StringTok{ }\NormalTok{grizzly }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{filter}\NormalTok{(Year }\OperatorTok{<}\StringTok{ }\DecValTok{1969}\NormalTok{)}
+
+\NormalTok{grizzly_plot_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(grizzly_early, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ N)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Year"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Bear Abundance"}\NormalTok{, }\DataTypeTok{title =} \StringTok{"Yearly Grizzly Bear population 1959 - 1968"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{text =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{family =} \StringTok{"Times"}\NormalTok{))}
+
+\NormalTok{grizzly_plot_}\DecValTok{1}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{answers_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#statistics - how has the population declined?}
+
+\NormalTok{early_diff <-}\StringTok{ }\NormalTok{(grizzly_early}\OperatorTok{$}\NormalTok{N[}\DecValTok{10}\NormalTok{]}\OperatorTok{-}\NormalTok{grizzly_early}\OperatorTok{$}\NormalTok{N[}\DecValTok{1}\NormalTok{])}
+
+\NormalTok{early_pyr <-}\StringTok{ }\NormalTok{early_diff}\OperatorTok{/}\DecValTok{10}
+
+\CommentTok{#the difference is -1/2 a bear per year}
+
+\NormalTok{early_perc <-}\StringTok{ }\NormalTok{early_diff}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(grizzly_early}\OperatorTok{$}\NormalTok{N)}
+
+\CommentTok{#total decline of about 1%}
+
+\NormalTok{early_model <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(grizzly_early}\OperatorTok{$}\NormalTok{N }\OperatorTok{~}\StringTok{ }\NormalTok{grizzly_early}\OperatorTok{$}\NormalTok{Year)}
+
+\KeywordTok{summary}\NormalTok{(early_model)}
+\end{Highlighting}
+\end{Shaded}
+
+The graph suggests that the grizzly population did decline from 1959 to
+1968. Logically, this would make sense as a main food source (the dumps)
+was removed around this time, causing more human-bear conflict that can
+lead to bear deaths. Statistically, we find that there are 5 fewer bears
+reported in 1968 than in 1959 representing a total decline of about 1\%
+during that time period.
+
+\textbf{7. Select the data from 1969 to 1978. Did the population
+continue to decline? Was the decline faster than the period prior to the
+dump closures? (1 point)}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#plot}
+\NormalTok{grizzly_mid <-}\StringTok{ }\NormalTok{grizzly }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{filter}\NormalTok{( Year }\OperatorTok{>}\StringTok{ }\DecValTok{1968} \OperatorTok{&}\StringTok{ }\NormalTok{Year }\OperatorTok{<}\StringTok{ }\DecValTok{1979}\NormalTok{)}
+
+\NormalTok{grizzly_plot_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(grizzly_mid, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ N)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Year"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Bear Abundance"}\NormalTok{, }\DataTypeTok{title =} \StringTok{"Yearly Grizzly Bear population 1969 - 1978"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{text =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{family =} \StringTok{"Times"}\NormalTok{))}
+
+\NormalTok{grizzly_plot_}\DecValTok{2}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{answers_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#statistics - how has the population declined?}
+
+\NormalTok{mid_diff <-}\StringTok{ }\NormalTok{(grizzly_mid}\OperatorTok{$}\NormalTok{N[}\DecValTok{10}\NormalTok{]}\OperatorTok{-}\NormalTok{grizzly_mid}\OperatorTok{$}\NormalTok{N[}\DecValTok{1}\NormalTok{])}
+
+\NormalTok{mid_pyr <-}\StringTok{ }\NormalTok{mid_diff}\OperatorTok{/}\DecValTok{10}
+
+\CommentTok{#the total percent decline}
+
+\NormalTok{mid_perc <-}\StringTok{ }\NormalTok{mid_diff}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(grizzly_early}\OperatorTok{$}\NormalTok{N)}
+
+\CommentTok{#use linear regression to compare slopes - is the slope the rate of decline?}
+
+
+\NormalTok{mid_model <-}\KeywordTok{lm}\NormalTok{(grizzly_mid}\OperatorTok{$}\NormalTok{N }\OperatorTok{~}\StringTok{ }\NormalTok{grizzly_mid}\OperatorTok{$}\NormalTok{Year)}
+
+\KeywordTok{summary}\NormalTok{(mid_model)}
+\end{Highlighting}
+\end{Shaded}
+
+The grizzly population continued to decline during this period. Between
+1969 and 1978 the population decreased by 8 bears, representing close to
+a 2\% decline overall. The rate of decline was similar to the previous
+10 years. Using a simple linear regression we find that from 1959 to
+1968, the average rate of decline was -0.763 bears per year, while from
+1969 to 1978 the population declined on average -0.757 bears per year.
+
+\textbf{8. Finally look at the data after 1978. Did population size
+continue to change? What was the direction and magnitude of the trend?
+(1 point)}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{grizzly_late <-}\StringTok{ }\NormalTok{grizzly }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{filter}\NormalTok{( Year }\OperatorTok{>}\StringTok{ }\DecValTok{1978}\NormalTok{)}
+
+\NormalTok{grizzly_plot_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(grizzly_late, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Year, }\DataTypeTok{y =}\NormalTok{ N)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Year"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Bear Abundance"}\NormalTok{, }\DataTypeTok{title =} \StringTok{"Yearly Grizzly Bear population 1978 - 1997"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{text =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{family =} \StringTok{"Times"}\NormalTok{))}
+
+\NormalTok{grizzly_plot_}\DecValTok{3}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{answers_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#statistics - how has the population declined?}
+
+\NormalTok{late_diff <-}\StringTok{ }\NormalTok{(grizzly_late}\OperatorTok{$}\NormalTok{N[}\DecValTok{10}\NormalTok{]}\OperatorTok{-}\NormalTok{grizzly_late}\OperatorTok{$}\NormalTok{N[}\DecValTok{1}\NormalTok{])}
+
+\NormalTok{late_pyr <-}\StringTok{ }\NormalTok{late_diff}\OperatorTok{/}\DecValTok{10}
+
+\CommentTok{#the total percent decline}
+
+\NormalTok{late_perc <-}\StringTok{ }\NormalTok{late_diff}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(grizzly_early}\OperatorTok{$}\NormalTok{N)}
+
+\CommentTok{#use linear regression to compare slopes - is the slope the rate of decline?}
+
+\NormalTok{late_model <-}\KeywordTok{lm}\NormalTok{(grizzly_late}\OperatorTok{$}\NormalTok{N }\OperatorTok{~}\StringTok{ }\NormalTok{grizzly_late}\OperatorTok{$}\NormalTok{Year)}
+
+\KeywordTok{summary}\NormalTok{(late_model)}
+\end{Highlighting}
+\end{Shaded}
+
+For the last 10 years represented in the data set, there appears to be
+an increase in bear population, with 22 more bears in 1979 than in 1968.
+Using linear regression, this amounts to an on average incease of 3.15
+bears per year.
+
+\textbf{9. Write a short paragraph to the park superintendent describing
+your conclusions on the effects (if any) of the dump closures on the
+grizzly bear population. (1 point)}
+
+While the dump closures appeared to coincide with a decline in the
+grizzly bear population, our analysis suggests that it actually had very
+little short term effect. The bear popluation was declining prior to the
+dump closures at about -.76 bears per year, and this rate remained
+approximately the same for the 10 year period after. Longer term, the
+dump closures may have had a positive effect on the grizzly population,
+as bear abundance increased between 1979 and 1997 at an average rate of
+approximately 3 bears per year. This may suggest that while dump
+closures may have at first increased human bear conflict, in the long
+term the decision helped keep bears away from the more densely populated
+areas of the park and decreased conflicts.
+
+\end{document}
