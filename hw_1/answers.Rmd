@@ -69,18 +69,10 @@ Using a two-sided t.test across the entire population found no significant diffe
 **6. Open the file, and look at the data from 1959 to 1968. Did the grizzly bear population decline over this period? Support your conclusion with graphs, statistics, and logical reasoning. (2 points)**  
 
 
-```{r, results= FALSE}
+```{r, echo = FALSE}
 #graph 
 grizzly_early <- grizzly %>% 
   filter(Year < 1969)
-
-grizzly_plot_1 <- ggplot(grizzly_early, aes(x = Year, y = N)) +
-  geom_line()+
-  theme_minimal()+
-  labs(x = "Year", y = "Bear Abundance", title = "Yearly Grizzly Bear population 1959 - 1968")+
-  theme(text = element_text(family = "Times"))
-
-grizzly_plot_1
 
 #statistics - how has the population declined?
 
@@ -96,8 +88,16 @@ early_perc <- early_diff/sum(grizzly_early$N)
 
 early_model <- lm(grizzly_early$N ~ grizzly_early$Year)
 
-summary(early_model)
+#summary(early_model)
 
+grizzly_plot_1 <- ggplot(grizzly_early, aes(x = Year, y = N)) +
+  geom_point()+
+  geom_smooth(method = lm, se = TRUE, size = 0.5) +
+  theme_minimal()+
+  labs(x = "Year", y = "Bear Abundance", title = "Yearly Grizzly Bear population 1959 - 1968")+
+  theme(text = element_text(family = "Times"))
+
+grizzly_plot_1
 
 ```
   
@@ -106,19 +106,12 @@ The graph suggests that the grizzly population did decline slightly from 1959 to
 
 **7. Select the data from 1969 to 1978. Did the population continue to decline? Was the decline faster than the period prior to the dump closures? (1 point)**
 
-```{r, results = FALSE}
+```{r, echo = FALSE}
 
 #plot
 grizzly_mid <- grizzly %>% 
   filter( Year > 1968 & Year < 1979)
 
-grizzly_plot_2 <- ggplot(grizzly_mid, aes(x = Year, y = N)) +
-  geom_line()+
-  theme_minimal()+
-  labs(x = "Year", y = "Bear Abundance", title = "Yearly Grizzly Bear population 1969 - 1978")+
-  theme(text = element_text(family = "Times"))
-
-grizzly_plot_2
 
 
 #statistics - how has the population declined?
@@ -136,27 +129,48 @@ mid_perc <- mid_diff/sum(grizzly_early$N)
 
 mid_model <-lm(grizzly_mid$N ~ grizzly_mid$Year)
 
-summary(mid_model)
+#summary(mid_model)
+
+#Residual standard error: 2.469 
+
+
+#now, run a p-norm test on these two standard errors by 1. Finding the pooled standard error and 2.finding the test stastistic
+
+se_early_sq <- (472.9413)^2
+
+se_mid_sq <- (536.3641)^2
+
+pooled_se <- sqrt(se_early_sq + se_mid_sq)
+
+#the difference in bears divided by the standard error
+midearly_tstat <- -5/pooled_se
+
+
+test <- pnorm(midearly_tstat, lower.tail = TRUE)
+
+test
+
+
+grizzly_plot_2 <- ggplot(grizzly_mid, aes(x = Year, y = N)) +
+  geom_point()+
+  geom_smooth(method = lm, se = TRUE, size = 0.5) +
+  theme_minimal()+
+  labs(x = "Year", y = "Bear Abundance", title = "Yearly Grizzly Bear population 1969 - 1979")+
+  theme(text = element_text(family = "Times"))
+
+grizzly_plot_2
 ```
 
   
-The grizzly population continued to decline during this period. Between 1969 and 1978 the population decreased by 8 bears, representing close to a 2% decline overall. The rate of decline was similar to the previous 10 years. Using a simple linear regression we find that from 1959 to 1968, the average rate of decline was -0.763 bears per year, while from 1969 to 1978 the population declined on average -0.757 bears per year.   
+The grizzly population continued to decline during this period. Between 1969 and 1978 the population decreased by 8 bears, representing close to a 2% decline overall. The rate of decline was similar to the previous 10 years. Using a simple linear regression we find that from 1959 to 1968, the average rate of decline was -0.763 bears per year, while from 1969 to 1978 the population declined on average -0.757 bears per year. Using the pnorm function, we find that the difference in bear abundance does not differ significantly (p > 0.10)  
 
 
 **8. Finally look at the data after 1978. Did population size continue to change? What was the direction and magnitude of the trend? (1 point)**
 
-```{r, results= FALSE}
+```{r, echo = FALSE}
 
 grizzly_late <- grizzly %>% 
   filter( Year > 1978)
-
-grizzly_plot_3 <- ggplot(grizzly_late, aes(x = Year, y = N)) +
-  geom_line()+
-  theme_minimal()+
-  labs(x = "Year", y = "Bear Abundance", title = "Yearly Grizzly Bear population 1978 - 1997")+
-  theme(text = element_text(family = "Times"))
-
-grizzly_plot_3
 
 
 #statistics - how has the population declined?
@@ -173,7 +187,20 @@ late_perc <- late_diff/sum(grizzly_early$N)
 
 late_model <-lm(grizzly_late$N ~ grizzly_late$Year)
 
-summary(late_model)
+#summary(late_model)
+
+
+#####
+
+grizzly_plot_3 <- ggplot(grizzly_late, aes(x = Year, y = N)) +
+  geom_point()+
+  geom_smooth(method = lm, se = TRUE, size = 0.5) +
+  theme_minimal()+
+  labs(x = "Year", y = "Bear Abundance", title = "Yearly Grizzly Bear population 1978 - 1997")+
+  theme(text = element_text(family = "Times"))
+
+grizzly_plot_3
+
 
 ```
   
