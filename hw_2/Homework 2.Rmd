@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
+library(Deriv)
 
 ```
 
@@ -76,9 +77,9 @@ This implies that the number of hunters needed depends both on the growth rate o
 ```{r}
 
 #what is the derivative of the model equation? gives you the slope (just to double check my calculations)
-#dFN <- Deriv(f)
+dFN <- Deriv(f)
 
-#Simplify(dFN)
+Simplify(dFN)
 ```
 
 **4. Write down the equation you would need to solve in order to find the value of any non-zero equilibria. If you enjoy doing algebra, you may use the quadratic formula to find the values of N that satisfy this equation, but that is entirely optional (the result is a rather complicated expression!).**
