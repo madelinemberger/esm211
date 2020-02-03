@@ -51,7 +51,7 @@ growth_plot
 
 **2.Based on this graph, how many equilibria are there? Which ones are stable?**
 
-Based on this graph there is one equilibria at zero, and it is unstable because the slope at that point is positive. There is another equilibria at N = 1500, which is stable as the growth rate is negative for N > 1500 and positive for N < 1500. 
+Based on this graph there is one equilibria at zero, which is stable as for values of N close to zero, the growth rate is negative and will decrease back towards zero. The second equilibria occurs around N = 400, which is unstable as for N > 400 the growth rate is positive and N will increase, rather than decrease towards 400. There is another equilibria at N = 1500, which is stable as the growth rate is negative for N > 1500 and positive for N < 1500. 
 
 
 **3. Returning to the full model with arbitrary parameter values, is there an equilibrium at N = 0 for all plausible parameter values? For what values of hunter number (P), expressed in terms of the other parameters of the model, is the zero equilibrium locally stable? If your goal is to eliminate the insvasive species, what does this tell you about how many hunters you need?**
@@ -71,9 +71,9 @@ $\frac{df(N)}{dN} = r-P*a$
 
 The equilibrium is stable when this expression is a negative value. Or when: 
 
-$0 = r-P*a$ solving for P:
+$0 > r-P*a$ solving for P:
 
-$P = \frac{r}{a}$  
+$P > \frac{r}{a}$  
 
 
 This implies that the number of hunters needed depends both on the growth rate of the invasive species as well as the "per pray attack rate", which is analagous to the number of shots a hunter takes on a given individual that are successful. For example, if the growth rate increases but the hunters do not increase their shots, then more hunters are needed. This might apply to an animal that is difficult to hunt, which wild boars most likely are. 
