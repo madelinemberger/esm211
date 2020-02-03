@@ -6,7 +6,9 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
 
 library(tidyverse)
 library(Deriv)
@@ -20,7 +22,7 @@ library(RColorBrewer)
 $f(N) = \frac{dN}{dt} = rN(1-\frac{N}{K}) - P(\frac{aN}{1 + ahN})$  
 
 **1. Make a graph of dN/dt vs. N, for particular values of the parameters** 
-Use r = 0.05, K = 2000, P = 4, a = 0.01, and h = 0.2.
+
 
 ```{r}
 
@@ -58,25 +60,28 @@ Looking at the expression, we see algebraically that when N = 0, $\frac{dN}{dt}$
 
 To find the values of P that would make the population stable, the model must first be differentiated in terms of N, which results in the equation: 
 
-$\frac{df(N)}{dN} = rN(1-\frac{2N}{K}) - P(\frac{a}{(1 + ahN)^2})$ 
+$\frac{df(N)}{dN} = rN(1-\frac{2N}{K}) - P(\frac{a}{(1 + ahN)^2})$  
 
-Since we are evaluating this expression at N = 0, the equation becomes: 
 
-$\frac{df(N)}{dN} = r-P*a$
+Since we are evaluating this expression at N = 0, the equation becomes:  
+
+
+$\frac{df(N)}{dN} = r-P*a$  
+
 
 The equilibrium is stable when this expression is a negative value. Or when: 
 
 $0 = r-P*a$ solving for P:
 
-$P = \frac{r}{a}$
+$P = \frac{r}{a}$  
 
 
-This implies that the number of hunters needed depends both on the growth rate of the invasive species as well as the "per pray attack rate", which is analagous to the number of shots a hunter takes (??). For example, if the growth rate increases but the hunters do not increase their shots, then more hunters are needed. This might apply to an animal that is difficult to hunt, which wild boars most likely are. 
+This implies that the number of hunters needed depends both on the growth rate of the invasive species as well as the "per pray attack rate", which is analagous to the number of shots a hunter takes on a given individual that are successful. For example, if the growth rate increases but the hunters do not increase their shots, then more hunters are needed. This might apply to an animal that is difficult to hunt, which wild boars most likely are. 
 
 *attack rate = a rate at which the hunter encounters and successfully kills*
 
 
-```{r}
+```{r, warning = FALSE}
 
 #what is the derivative of the model equation? gives you the slope (just to double check my calculations)
 dFN <- Deriv(f)
@@ -123,7 +128,7 @@ When the hunting rate exceeds the intrinsic growth rate, we would expect the pop
 
 **c. How do the patterns you see on this graph relate to the ones in problem 1?**
 
-This matches what we see in number one in that 
+This matches what we see in number one in that the population growth rate is negative between 0 and N = 400, and on this graph that area also shows the hunting rate as greater than the growth rate. From N = 400 to N = 1500, the graph in number one has a positive growth rate matching the lower hunting rate shown for that interval on this graph. After 1500, we see a larger hunting rate in the current graph matching the graph in number one in that after 1500, the higher hunting rate will exceed the population growth rate and drive the population back towards the equilibrium, N = 1500. 
 
 **6. Now make two similar graphs, keeping all the parameters the same but setting P = 1 in one graph and P = 6 in the other. How many equilbria are there in each case, and which are stable?**
 
@@ -167,36 +172,44 @@ Yes - From graph 1, when P = 4, N = 100 falls within the domain of attraction of
 If the species reaches carrying capacity before any management begins, introducing 4 hunters will help to quell the population slighly by reducing it to N = 1500. However, the population will remain at 1500 as long as the birth rate remains the same and the hunting efficiency ("a") remains the same as well. This is because populations of invasive species greater than N = 400 occur within the domain  of attraction for an equilibrium of 1500, not zero. 
 
 
-**8. It can be instructive to see how the equilibrium values depend on the number of hunters. Here you will make plots of this, using the same parameter values as above. You already know the formula for the zero equilibrium, N∗0; the formulas for the other two are:**
+**8. It can be instructive to see how the equilibrium values depend on the number of hunters. Here you will make plots of this, using the same parameter values as above. You already know the formula for the zero equilibrium, N0; the formulas for the other two are:**
 
-
-Use same parameters
+**a. Plot the three equilibria equations**
 ```{r}
 
-d <- 1/a*h
+d <- 1/(a*h)
 
 f_eq_1 <- function(P){
-  .5 * ((K - d) - sqrt((K-d)^2 + (4*K*d)/(r*(r - a*P))))
+  x = (K- d)^2 + ((4*K*d)/r)*(r - a*P)
+  .5 * ((K - d) - (x)^.5)
 }
+
 
 f_eq_2 <- function(P){
-  .5 * ((K - d) + ((K-d)^2 + (4*K*d)/(r*(r - a*P)))^.5)
+  .5 * ((K - d) + ((K-d)^2 + ((4*K*d)/r)*(r - a*P))^.5)
 }
+ #########################
 
-f_eq_3 <- function(P)
 
 
-eq_plot<- ggplot(data.frame(P = 0:7), aes(x = P))+ 
+ggplot(data.frame(P = 0:7), aes(x = P))+ 
   stat_function(fun = f_eq_1, color = "red") +
-  #stat_function(fun = f_eq_2, color = "green")+
+  stat_function(fun = f_eq_2, color = "black")+
   geom_hline(yintercept = 0) +
-  ylab("Equilibrium") + 
+  geom_vline(xintercept = 1, linetype = "dotted")+
+  labs( x= "Number of hunters (P)", y = "Equilibrium") + 
   theme_minimal()
 
-eq_plot
+
 
 ```
 
+**b. Draw a vertical dotted line where the zero equilbrium changes from locally stable to locally unstable. What else happens at this value of P?**
 
+At P = 1, the equilibrium becomes unstable. This is because before there are any hunters (1 or fewer hunters), there does not exist a non-zero equilibrium that is different than K because there is not enough hunting pressure to control the population below the carrying capacity. At this value of P, there also come to exist 3 equilibria (where N = 0) rather than two, which changes the domain of attraction for equilibria at N = 0.
+
+**c. What else can you learn from this graph? What confuses or concerns you about this graph?**
+
+This graph tells us that after a certain number of hunters, all hunting at the given rate "a", there is no other equilibrium than zero because the hunting pressure exceeds the population growth rate for every value of N. Looking at the first graph created, increasing P to 6 shows the population as always negative. That is reflected this graph as well, as the equilibrium does not exist for either after ~P = 5.5. 
 
 
