@@ -2,7 +2,7 @@
 title: "Homework 2"
 author: "Madeline Berger"
 date: "1/28/2020"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(Deriv)
+library(RColorBrewer)
 
 ```
 
@@ -17,7 +18,6 @@ library(Deriv)
 ###Analyzing growth model for invasive species with managed hunting 
 
 $f(N) = \frac{dN}{dt} = rN(1-\frac{N}{K}) - P(\frac{aN}{1 + ahN})$  
-
 
 **1. Make a graph of dN/dt vs. N, for particular values of the parameters** 
 Use r = 0.05, K = 2000, P = 4, a = 0.01, and h = 0.2.
@@ -29,7 +29,7 @@ Use r = 0.05, K = 2000, P = 4, a = 0.01, and h = 0.2.
 r <- 0.05
 K <- 2000
 P <- 4
-a <- 0.01
+a <- 0.05 
 h <- 0.2
 
 #write out function
@@ -49,7 +49,7 @@ growth_plot
 
 **2.Based on this graph, how many equilibria are there? Which ones are stable?**
 
-Based on this graph there is one equilibria at zero, and it is unstable because the slope at that point is positive. 
+Based on this graph there is one equilibria at zero, and it is unstable because the slope at that point is positive. There is another equilibria at N = 1500, which is stable as the growth rate is negative for N > 1500 and positive for N < 1500. 
 
 
 **3. Returning to the full model with arbitrary parameter values, is there an equilibrium at N = 0 for all plausible parameter values? For what values of hunter number (P), expressed in terms of the other parameters of the model, is the zero equilibrium locally stable? If your goal is to eliminate the insvasive species, what does this tell you about how many hunters you need?**
@@ -73,6 +73,8 @@ $P = \frac{r}{a}$
 
 This implies that the number of hunters needed depends both on the growth rate of the invasive species as well as the "per pray attack rate", which is analagous to the number of shots a hunter takes (??). For example, if the growth rate increases but the hunters do not increase their shots, then more hunters are needed. This might apply to an animal that is difficult to hunt, which wild boars most likely are. 
 
+*attack rate = a rate at which the hunter encounters and successfully kills*
+
 
 ```{r}
 
@@ -88,7 +90,7 @@ To find any non-zero equilibria, set the intial equation to zero, and solve for 
  
 $0 = r*N*(1-\frac{N}{k})-P*(\frac{aN}{1 + ahN})$
 
-**5.Because the algebra is tedious, and the result is so complex that it doesn’t give a lot of insight, it’s useful to do some more graphical analysis. In particular, we break the equation into its two component parts, the intrinsic population growth** $r*N*(1-\frac{N}{k})$ **and hunting** $P*(\frac{aN}{1 + ahN})$
+**5. Because the algebra is tedious, and the result is so complex that it doesn’t give a lot of insight, it’s useful to do some more graphical analysis. In particular, we break the equation into its two component parts, the intrinsic population growth** $r*N*(1-\frac{N}{k})$ **and hunting** $P*(\frac{aN}{1 + ahN})$
 
 a. Using the same parameters as before, graph both the intrinsic growth rate and hunting rate as functions of N on the same graph.
 
@@ -98,13 +100,13 @@ f_growth = function(N) {
   r * N * (1 -(N/K))
   }
 
-f_hunt = function(N){
+f_hunt = function(N, P = 4){
   P * (a*N/(1 + a*h*N))
 }
 
 separate_plot <- ggplot(data.frame(N = 0:2000), aes(x = N))+ 
   stat_function(fun = f_growth, color = "red") +
-  stat_function(fun = f_hunt, color = "green")+
+  stat_function(fun = f_hunt, linetype = "dotted")+
   geom_hline(yintercept = 0) +
   ylab("dN/dt")+
   theme_minimal()
@@ -116,99 +118,77 @@ separate_plot
 
 **b. What do you expect will happen to the population when the hunting rate is greater than the intrinsic growth rate? When it is less? When they are equal?**
 
-When the hunting rate exceeds the intrinsic growth rate, we would expect the population to decrease. When it is less, the population would be expected to increase. At the point of intersection the population is in equilibrium because 
+When the hunting rate exceeds the intrinsic growth rate, we would expect the population to decrease. When it is less, the population would be expected to increase. At the point of intersection the population is in equilibrium because birth rate (dn/dt) is equal to mortality (hunting rate)
 
 
 **c. How do the patterns you see on this graph relate to the ones in problem 1?**
 
-? 
+This matches what we see in number one in that 
 
 **6. Now make two similar graphs, keeping all the parameters the same but setting P = 1 in one graph and P = 6 in the other. How many equilbria are there in each case, and which are stable?**
 
 ```{r}
 
-#new hunter numbers
-P_1 <- 1
 
-P_6 <- 6
 
-f_hunt_1 = function(N){
-  P_1 * (a*N/(1 + a*h*N))
-}
-
-f_hunt_6 = function(N){
-  P_6 * (a*N/(1 + a*h*N))
-}
-
-separate_plot_1 <- ggplot(data.frame(N = 0:2000), aes(x = N))+ 
+separate_plot <- ggplot(data.frame(N = 0:2000), aes(x = N))+ 
   stat_function(fun = f_growth, color = "red") +
-  stat_function(fun = f_hunt_1, color = "green")+
+  stat_function(fun = f_hunt, args = list(P = 1), color = "gray", linetype = "dashed")+
+  stat_function(fun = f_hunt, args = list(P = 6), linetype = "dotted")+
   geom_hline(yintercept = 0) +
   ylab("dN/dt")+
   theme_minimal()
 
-separate_plot_1
-
-
-separate_plot_6 <- ggplot(data.frame(N = 0:2000), aes(x = N))+ 
-  stat_function(fun = f_growth, color = "red") +
-  stat_function(fun = f_hunt_6, color = "green")+
-  geom_hline(yintercept = 0) +
-  ylab("dN/dt") + 
-  theme_minimal()
-
-separate_plot_6
+separate_plot
 
 
 
 ```
 
-When P = 1, or when there is only one hunter, there are three equilibria: at N = 0, N = K, and when the instrinsic growth rate is equal to the hunting rate. Stable equilibria occur at N = K and and the intersection point, as the slope of the growth rate is negative.
+When P = 1, or when there is only one hunter, there are three equilibria: at N = 0, N = K, and when the population growth rate is equal to the hunting rate. Stable equilibria occur at N = K, and at the intersection point of the two lines 
 
-When P = 6 (six hunters), there are four equilibria as the lines cross twice. Two of these equilibria are stable. 
+When P = 6 (six hunters), there is only one equilibrium at N = 0. This makes sense since the hunting rate, which can be though as mortality, always exceeds the birth rate (dN/dt), keeping the population from being able to increase to any stable point beyond zero. 
+
 
 **7. The situation in problem 5 is an example of bistability, like in the strong Allee effect. It has important management implications.**
 
-a. What is the domain of attraction of the zero equlibrium (approximately—you can estimate it from the graph) b, What is the domain of attraction of the largest equibrium?
+**a. What is the domain of attraction of the zero equlibrium (approximately—you can estimate it from the graph) b, What is the domain of attraction of the largest equibrium?**
 
-b. If you noticed the arrival of the species soon after it arrived, and initiated control activities when it had reached N = 100 individuals, would you be able to extirpate it with 4 hunters?
-
-```{r}
-
-#plug in 100 to equation to find dN/dt so you can find r / a? but do  you plug it into the derivative?
-
-N_100 <- f(100) 
+Looking back at the first graph created, from N = 0 to appx N = 400 the population will be attracted to the zero equilibrium since between those values, the growth rate is negative. From 400 to infitinty it will be attracted to N = 1500, a stable equilibrium. This is because the growth rate is positive for any value between N = 400 and N = 1500, causing the population to approach 1500, whereas after N = 1500 the growth rate is negative, causing the population to decrease back towards 1500. 
 
 
+**b. If you noticed the arrival of the species soon after it arrived, and initiated control activities when it had reached N = 100 individuals, would you be able to extirpate it with 4 hunters?**
 
-r_a_N_100 <- N_100/a # this is way to big 
-
-```
-
-
-c. What about if the population was already at carrying capacity when you initiated control activities?
-
-```{r}
+Yes - From graph 1, when P = 4, N = 100 falls within the domain of attraction of the zero equilibrium. Therefore, even if the population reaches 100 somehow, the growth rate remains negative and the hunters will be able to eliminate the species.  
 
 
+**c. What about if the population was already at carrying capacity when you initiated control activities?**
 
-```
-
+If the species reaches carrying capacity before any management begins, introducing 4 hunters will help to quell the population slighly by reducing it to N = 1500. However, the population will remain at 1500 as long as the birth rate remains the same and the hunting efficiency ("a") remains the same as well. This is because populations of invasive species greater than N = 400 occur within the domain  of attraction for an equilibrium of 1500, not zero. 
 
 
 **8. It can be instructive to see how the equilibrium values depend on the number of hunters. Here you will make plots of this, using the same parameter values as above. You already know the formula for the zero equilibrium, N∗0; the formulas for the other two are:**
 
+
+Use same parameters
 ```{r}
 
 d <- 1/a*h
 
 f_eq_1 <- function(P){
-  .5 * ((K - d) - sqrt((K-d)^2 + (4*K*d)/r*(r - a*P)))
+  .5 * ((K - d) - sqrt((K-d)^2 + (4*K*d)/(r*(r - a*P))))
 }
+
+f_eq_2 <- function(P){
+  .5 * ((K - d) + ((K-d)^2 + (4*K*d)/(r*(r - a*P)))^.5)
+}
+
+f_eq_3 <- function(P)
+
 
 eq_plot<- ggplot(data.frame(P = 0:7), aes(x = P))+ 
   stat_function(fun = f_eq_1, color = "red") +
-  #stat_function(fun = f_hunt_6, color = "green")+
+  #stat_function(fun = f_eq_2, color = "green")+
   geom_hline(yintercept = 0) +
   ylab("Equilibrium") + 
   theme_minimal()
