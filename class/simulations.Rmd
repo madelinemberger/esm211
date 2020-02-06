@@ -1,0 +1,49 @@
+---
+title: "class simulations"
+author: "Madeline Berger"
+date: "2/4/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(PVA)
+
+
+#
+```
+
+1. Generate future rt's
+
+No = current population 
+
+N1 = lambdat * No
+
+N2 = e^rt*N1
+
+```{r}
+#function takes mu, sigma, N0 and time horizon and loops through the entire 
+
+simulateSEG
+
+#if mu is negative, we expect to see a decline 
+#if sigma has a value, adds variability 
+
+simulateSEG(-0.01, 0.05, 100, 10)
+
+
+```
+
+Notes:
+rnorm generates normally distrubted random numbers
+SEG will never predict zero because lambda needs to be zero, which would make the growth rate (due to logs) negative infinity. That will never be drawn from the rnorm function 
+
+Applying to grizzlies
+```{r}
+simulateSEG(mu = -0.013, sigma2 = .003, N0 = 40, time_horizon = 20)
+```
+
