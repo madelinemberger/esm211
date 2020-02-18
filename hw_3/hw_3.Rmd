@@ -1,0 +1,190 @@
+---
+title: "hw_3"
+author: "Madeline Berger"
+date: "2/18/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(popbio)
+library(primer)
+
+```
+##Modeling Sea Turtle Age Structure
+
+Through Analyzing loggerhead a sea turtle population model by Crowder et al. (1994), we will answer the following quetsions
+
+- Is a reduction of fisheries bycatch needed to arrest the decline in the sea turtle population?
+- If so, by how much?
+
+Notes: 
+- Sea turtles have 5 life stages
+- We have survivalship data and fecundity for each of these life stages
+
+
+###Step 1: Enter the matrix from Table 2 in paper
+```{r}
+class_names <- c("Egg", "Sm Juv", "Lg Juv", "Subadult", "Adult")
+
+A <- matrix(c(0, 0, 0, 4.665, 61.896,
+0.675, 0.703, 0, 0, 0,
+0, 0.047, 0.657, 0, 0,
+0, 0, 0.019, 0.682, 0,
+0, 0, 0, 0.061, 0.809),
+nrow = 5, ncol = 5, byrow = TRUE, dimnames = list(class_names, class_names))
+
+A
+
+#to subset, use row then column
+A[4,3]
+
+A[ ,3] #all rows, just column 3
+A[4, ] #all columns, just row 4
+
+A[3:4, 3] #gives elements (3,3) and (4,3)
+A[ , c(3,5)] #columns 3 and 5
+A[-1, ] #everything except first row 
+
+
+#which number tells me eggs per subadult?
+A[1, 4]
+
+#which number tells me how many subadults make it to adult hood?
+A[5, 4]
+```
+
+###Step 2: Projecting the population matrix
+```{r}
+
+n_0 <- c(1000, 10, 10, 10, 10)
+# Initial abundance: 1000 eggs and 10 indidviudals in each of the other stages (vector)
+
+pop <- pop.projection(A, n_0, iterations = 10) 
+# Project the matrix through time. This is doing matrix multiplication on loop. Assumption is that nothing is changing
+
+#by hand - this is what the function is doing:
+#A %*% n_0 = after one year
+#A %*% n_1 = after two years.. etc 
+
+stage.vector.plot(pop$stage.vector) # Plot each stage through time, note y-axis. If you want abundance see below: 
+
+stage.vector.plot(pop$stage.vector, proportions = FALSE)
+```
+
+`pop.changes` = if pop has reached SSD, all will be changing at rate labmda which means the whole population is changing at lambda. Can see later in the iterations it gets closer and closer to one number
+
+`pop$lambda` is not the true SSD rate, its just pulled from the last simulation
+
+2.2 Plot `pop$pop.sizes` and `pop$pop.changes` through time. What do these tell you?
+``` {r}
+
+plot(pop$pop.sizes)
+#this is showing total number of individuals across all the stages. X-axis is time
+```
+
+2.3 How do you know it has reached the stable age population? All are increasing or decreasing at the same rate?
+- The population is changing exponentially, so if we take the log it becomes linear which is easier to assess visually
+- If proportion graphs all have flat lines, would tell you the same thing
+```{r}
+stage.vector.plot(pop$stage.vector, proportions = FALSE, log = "y")
+
+#clear that they are not doing the same thing (see bottom lines)
+```
+
+2.4. If the population has not reached the SSD, run the simulation for longer. How many years are required before the population appears to be at the SSD?
+
+```{r}
+pop_long <- pop.projection(A, n_0, iterations = 30) 
+
+stage.vector.plot(pop_long$stage.vector) # Plot each stage through time, note y-axis. If you want abundance see below: 
+
+stage.vector.plot(pop_long$stage.vector, proportions = FALSE, log = "y")
+
+#15 to 20 years? 
+```
+
+###Step 3: Analyze the population matrix
+```{r}
+#what are the dynamics when the population has reached SSD?
+lambda(A)
+stable.stage(A)
+
+#lambda is less than one, which means it is declining
+#what we want is for lambda to be greater than one
+
+```
+
+**3.1. Compare the values of lambda and SSD with the equivalent outputs of pop.projection from the initial run (with only 10 years of simulation). Why are they different?**
+
+[[because the first one is limited to the number of simulations run]]
+
+
+**3.2. You want to improve the status of the population so that it is no longer declining. You think that your best options are to manage the nesting beaches to increase egg/hatchling survival (e.g., controlling poaching, motorized vehicles, dogs, bright lights that disorient hatchlings) or to reduce the bycatch of adult turtles in shrimp trawling nets (e.g., by requiring a modified design with a “turtle excluder device” or by reducing fishing effort). Use the model to evaluate the effects of these two strategies:**
+
+a. Which element of the projection matrix represents egg/hatchling survival? Which represents adult survival?
+
+```{r}
+A[2,1] #survival of eggs to small juveniles
+
+A[5,5] #survival of adults (from adults, to adults)
+```
+
+
+b. Increase egg/hatchling survival in the model, and re-calculate λ1. By how much does it increase? Experiment with different values of this survival term until you get an asymptotic growth rate of 1 or more. How large does egg survival need to be to achieve this?
+
+```{r}
+
+#increase by 0.1, then by 0.2, then by .01...
+class_names <- c("Egg", "Sm Juv", "Lg Juv", "Subadult", "Adult")
+
+A_eggs <- matrix(c(0, 0, 0, 4.665, 61.896,
+0.999, 0.703, 0, 0, 0,
+0, 0.047, 0.657, 0, 0,
+0, 0, 0.019, 0.682, 0,
+0, 0, 0, 0.061, 0.809),
+nrow = 5, ncol = 5, byrow = TRUE, dimnames = list(class_names, class_names))
+
+pop_eggs <- pop.projection(A_eggs, n_0, iterations = 10) 
+
+lambda(A_eggs)
+
+#no matter how high egg survival is (even 100%), holding all else constant, cannot get lambda to be greater than one. This suggests we need dual management action that adressess other life stages as well.
+
+```
+
+
+c. Put the egg survival back to its original value, increase adult survival in the model, and re-calculate λ1. By how much does it increase? Experiment with different values of this survival term until you get an asymptotic growth rate of 1 or more. How large does adult survival need to be to achieve this?
+
+```{r}
+
+class_names <- c("Egg", "Sm Juv", "Lg Juv", "Subadult", "Adult")
+
+A_adult <- matrix(c(0, 0, 0, 4.665, 61.896,
+0.675, 0.703, 0, 0, 0,
+0, 0.047, 0.657, 0, 0,
+0, 0, 0.019, 0.682, 0,
+0, 0, 0, 0.061, 0.924),
+nrow = 5, ncol = 5, byrow = TRUE, dimnames = list(class_names, class_names))
+
+pop_adult <- pop.projection(A_adult, n_0, iterations = 10) 
+
+lambda(A_adult)
+
+#you need at least 0.924 survival, all else constant, to get an increasing population
+```
+
+
+d. Based on this analysis, which life stage seems the more promising one to target managment at? What else would you need to know to reach a final conclusion?
+
+
+###Step 4: Sensitivity and elasticity analysis in R
+```{r}
+
+
+
+
+```
+
