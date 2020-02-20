@@ -183,6 +183,41 @@ d. Based on this analysis, which life stage seems the more promising one to targ
 ###Step 4: Sensitivity and elasticity analysis in R
 ```{r}
 
+#get the sensitivities
+DemoInfo(A)
+
+#shows how much lambda will increase given a unit increase of that matrix element
+
+```
+**Notes**
+Important to ask: is an element 0 because of a impossible transition or it is data you don't have? 
+
+Big changes: fertility coeffcients
+Senstivity: whats the effect of a one unit increase in egg number? very small
+Elasticity: what's the effect of a 100% increase in egg number (proportional increase of 1)? larger 
+
+If aij is smaller, than a unit increase can be a large proportional change as compared to a proportional change
+
+**Questions**
+4.1. Referring to the help page and section 2.2 of the Stevens chapter, make sure you understand what each of the outpurs of DemoInfo represents. The “RV” (reproductive value) is the only bit we haven’t covered in lecture.
+
+4.2. Looking at the sensitivity and elasticity matrices, what can you conlude about which matrix elements would likely have the biggest impact on λ if they were changed?
+
+
+4.3. Compare the elasticity matrix with Fig. 1 in Crowder et al. (1994). Do you understand where the values in the figure come from?
+
+
+4.4. Look at the sensitivity matrix produced by DemoInfo. What does the sensitivity for element a5,1 represent? Does it make sense to have a non-zero value here? Why or why not?
+
+###Step 5: Sensitivity and elasticity of λ to vital rates
+
+```{r}
+
+A.vr <- expression(0, 0, 0, p4*g4*f, p5*f,
+p1, p2*(1-g2), 0, 0, 0,
+0, p2*g2, p3*(1-g3), 0, 0,
+0, 0, p3*g3, p4*(1-g4), 0,
+0, 0, 0, p4*g4, p5)
 
 
 
